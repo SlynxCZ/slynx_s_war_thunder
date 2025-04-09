@@ -31,8 +31,6 @@ int main() {
     std::string path = Shared::GetUserPath("\\Desktop\\Slynx's War Thunder Launcher.lnk");
     LPCSTR shortcutPath = path.c_str();
 
-    Logger::Warning(Shared::GetExecutablePath());
-
     if (!Shared::CheckAppDirectory(expectedPath)) {
         Logger::Error("Incorrect directory. Regenerating files and creating shortcut...");
 

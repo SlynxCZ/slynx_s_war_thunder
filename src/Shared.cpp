@@ -15,10 +15,13 @@ int main() {
     Logger::Info("Slynx's War Thunder Launcher, booting...");
 
     std::string expectedPath = "C:/Slynx-War-Thunder-Launcher";
+    std::string targetPath = "C:/Slynx-War-Thunder-Launcher/Slynx's War Thunder Launcher.exe";
+    std::string shortcutPath = "C:/Users/YourUsername/Desktop/Slynx's War Thunder Launcher.lnk";
 
-    // Zkontroluj, jestli jsme ve správné složce
     if (!Shared::CheckAppDirectory(expectedPath)) {
-        Logger::Error("Please run the application from the correct directory.");
+        Logger::Error("Incorrect directory. Regenerating files and creating shortcut...");
+
+        Shared::RegenerateFilesAndCreateShortcut(targetPath, shortcutPath);
         return -1;
     }
 

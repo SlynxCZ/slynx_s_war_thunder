@@ -1,0 +1,3 @@
+﻿# Ignorovat všechny build složky
+build/
+cmake-build-*/

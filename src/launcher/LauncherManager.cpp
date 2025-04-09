@@ -8,6 +8,7 @@
 #include <windows.h>
 #include <thread>
 #include <chrono>
+#include <conio.h>
 
 bool LauncherManager::StartLauncher(int waitSeconds) {
     Logger::Info("Booting Gaijin Launcher...");
@@ -24,15 +25,35 @@ bool LauncherManager::StartLauncher(int waitSeconds) {
     }
 
     Logger::Info("Waiting " + std::to_string(waitSeconds) + " seconds for updates...");
-    std::this_thread::sleep_for(std::chrono::seconds(waitSeconds));
+    Logger::Info("Press [Enter] to cancel and keep launcher open.");
 
-    Logger::Info("Terminating launcher (if still running)...");
-    TerminateLauncher();
+    bool cancel = false;
+    for (int i = 0; i < waitSeconds * 10; ++i) {
+        if (_kbhit()) {
+            int key = _getch();
+            if (key == 13) {
+                cancel = true;
+                Logger::Warning("Update interrupt detected. Launcher will remain open.");
+                break;
+            }
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+
+    if (!cancel) {
+        Logger::Info("Terminating launcher (if still running)...");
+        TerminateLauncher();
+
+        CloseHandle(pi.hProcess);
+        CloseHandle(pi.hThread);
+
+        Logger::Info("Boot finished! Starting game...");
+        return true;
+    }
 
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
-
-    return true;
+    return false;
 }
 
 void LauncherManager::TerminateLauncher() {

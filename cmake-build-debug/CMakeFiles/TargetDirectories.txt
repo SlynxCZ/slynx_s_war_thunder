@@ -1,3 +1,0 @@
-C:/Users/micha/CLionProjects/war-thunder-w/slynx's-war-thunder/cmake-build-debug/CMakeFiles/slynx_s_war_thunder.dir
-C:/Users/micha/CLionProjects/war-thunder-w/slynx's-war-thunder/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/micha/CLionProjects/war-thunder-w/slynx's-war-thunder/cmake-build-debug/CMakeFiles/rebuild_cache.dir

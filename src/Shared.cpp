@@ -14,6 +14,14 @@
 int main() {
     Logger::Info("Slynx's War Thunder Launcher, booting...");
 
+    std::string expectedPath = "C:/Slynx-War-Thunder-Launcher";
+
+    // Zkontroluj, jestli jsme ve správné složce
+    if (!Shared::CheckAppDirectory(expectedPath)) {
+        Logger::Error("Please run the application from the correct directory.");
+        return -1;
+    }
+
     LauncherManager launcher;
     if (launcher.StartLauncher(20)) {
         Logger::Info("Boot finished! Starting game...");
@@ -36,6 +44,19 @@ std::string Shared::GetExecutablePath() {
     return std::string(buffer);
 }
 
+bool Shared::CheckAppDirectory(const std::string& expectedPath) {
+    std::string currentPath = GetExecutablePath();
+    size_t pos = currentPath.find_last_of("\\/");
+    std::string currentDir = currentPath.substr(0, pos);
+
+    if (currentDir == expectedPath) {
+        Logger::Info("Correct directory: " + currentDir);
+        return true;
+    }
+    Logger::Error("Incorrect directory. Expected: " + expectedPath + " but got: " + currentDir);
+    return false;
+}
+
 bool Shared::CopyAndRenameExecutable(const std::string& sourcePath, const std::string& targetPath) {
     if (CopyFileA(sourcePath.c_str(), targetPath.c_str(), FALSE)) {
         std::stringstream message;
@@ -44,7 +65,7 @@ bool Shared::CopyAndRenameExecutable(const std::string& sourcePath, const std::s
         return true;
     }
     std::stringstream message;
-    message << "Error copying file: " << GetLastError;
+    message << "Error copying file: " << GetLastError();
     Logger::Error(message.str());
     return false;
 }
@@ -56,7 +77,7 @@ std::string Shared::GetUserPath(const std::string& relativePath) {
     return std::string(userProfile) + relativePath;
 }
 
-bool CreateShortcut(const std::string& targetPath, const std::string& shortcutPath) {
+bool Shared::CreateShortcut(const std::string& targetPath, const std::string& shortcutPath) {
     IShellLinkW* pShellLink = nullptr;
     IPersistFile* pPersistFile = nullptr;
 
@@ -97,4 +118,20 @@ bool CreateShortcut(const std::string& targetPath, const std::string& shortcutPa
     message << "Shortcut created at " << shortcutPath;
     Logger::Info(message.str());
     return true;
+}
+
+void Shared::RegenerateFilesAndCreateShortcut(const std::string& targetPath, const std::string& shortcutPath) {
+    Logger::Info("Regenerating necessary files...");
+
+    std::string sourcePath = GetExecutablePath();
+    if (!CopyAndRenameExecutable(sourcePath, targetPath)) {
+        Logger::Error("Failed to regenerate files.");
+        return;
+    }
+
+    Logger::Info("Files regenerated successfully.");
+
+    if (!CreateShortcut(targetPath, shortcutPath)) {
+        Logger::Error("Failed to create shortcut.");
+    }
 }

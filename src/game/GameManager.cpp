@@ -18,11 +18,11 @@ bool GameManager::StartGame() {
     LPCSTR gamePath = path.c_str();
 
     if (!CreateProcessA(gamePath, nullptr, nullptr, nullptr, FALSE, 0, nullptr, nullptr, &si, &pi)) {
-        Logger::Error("Failed to launch the game.");
+        Logger::Error("Failed to launch the game");
         return false;
     }
 
-    Logger::Info("Game process started successfully.");
+    Logger::Info("Game process started successfully");
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
     return true;

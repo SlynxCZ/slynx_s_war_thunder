@@ -20,12 +20,12 @@ bool LauncherManager::StartLauncher(int waitSeconds) {
     LPCSTR launcherPath = path.c_str();
 
     if (!CreateProcessA(launcherPath, nullptr, nullptr, nullptr, FALSE, 0, nullptr, nullptr, &si, &pi)) {
-        Logger::Error("Failed to boot Gaijin launcher.");
+        Logger::Error("Failed to boot Gaijin launcher");
         return false;
     }
 
     Logger::Info("Waiting " + std::to_string(waitSeconds) + " seconds for updates...");
-    Logger::Info("Press [Enter] to cancel and keep launcher open.");
+    Logger::Info("Press [Enter] to cancel and keep launcher open");
 
     bool cancel = false;
     for (int i = 0; i < waitSeconds * 10; ++i) {
@@ -33,7 +33,7 @@ bool LauncherManager::StartLauncher(int waitSeconds) {
             int key = _getch();
             if (key == 13) {
                 cancel = true;
-                Logger::Warning("Update interrupt detected. Launcher will remain open.");
+                Logger::Warning("Update interrupt detected. Launcher will remain open");
                 break;
             }
         }
@@ -62,6 +62,6 @@ void LauncherManager::TerminateLauncher() {
         PostMessage(hwnd, WM_CLOSE, 0, 0);
         Logger::Info("Sent WM_CLOSE to War Thunder Launcher.");
     } else {
-        Logger::Warning("Launcher window not found, could not close it via WM_CLOSE.");
+        Logger::Warning("Launcher window not found, could not close it via WM_CLOSE");
     }
 }

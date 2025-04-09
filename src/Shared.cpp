@@ -26,10 +26,12 @@ int main() {
 
     Logger::Info("Slynx's War Thunder Launcher, booting...");
 
-    std::string expectedPath = "C:/Slynx-War-Thunder-Launcher";
+    std::string expectedPath = "C:\\Slynx-War-Thunder-Launcher";
     std::string targetPath = "C:/Slynx-War-Thunder-Launcher/Slynx's War Thunder Launcher.exe";
     std::string path = Shared::GetUserPath("\\Desktop\\Slynx's War Thunder Launcher.lnk");
     LPCSTR shortcutPath = path.c_str();
+
+    Logger::Warning(Shared::GetExecutablePath());
 
     if (!Shared::CheckAppDirectory(expectedPath)) {
         Logger::Error("Incorrect directory. Regenerating files and creating shortcut...");
@@ -64,7 +66,7 @@ std::string Shared::GetExecutablePath() {
 
 bool Shared::CheckAppDirectory(const std::string &expectedPath) {
     std::string currentPath = GetExecutablePath();
-    size_t pos = currentPath.find_last_of("\\/");
+    size_t pos = currentPath.find_last_of("\\\\");
     std::string currentDir = currentPath.substr(0, pos);
 
     if (currentDir == expectedPath) {

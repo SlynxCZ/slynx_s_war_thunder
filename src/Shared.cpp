@@ -43,7 +43,7 @@ int main() {
         return -1;
     }
 
-    if (LauncherManager::StartLauncher(20)) {
+    if (LauncherManager::StartLauncher(10)) {
         Logger::Info("Boot finished! Starting game...");
 
         if (!GameManager::StartGame()) {

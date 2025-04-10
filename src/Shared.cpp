@@ -40,12 +40,10 @@ int main() {
         return -1;
     }
 
-    LauncherManager launcher;
-    if (launcher.StartLauncher(20)) {
+    if (LauncherManager::StartLauncher(10)) {
         Logger::Info("Boot finished! Starting game...");
 
-        GameManager game;
-        if (!game.StartGame()) {
+        if (!GameManager::StartGame()) {
             Logger::Error("Failed to launch the game.");
         }
     } else {

@@ -6,7 +6,6 @@
 #include "../logger/Logger.h"
 #include <windows.h>
 #include <string>
-#include <cstdint>
 
 bool GameManager::StartGame() {
     Logger::Info("Launching War Thunder via Steam with overlay...");
@@ -22,7 +21,7 @@ bool GameManager::StartGame() {
         SW_SHOWDEFAULT
     );
 
-    if (reinterpret_cast<std::uintptr_t>(result) <= 32) {
+    if (reinterpret_cast<int>(result) <= 32) {
         Logger::Error("Failed to launch the game via Steam");
         return false;
     }

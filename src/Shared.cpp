@@ -12,7 +12,7 @@
 #include <shlobj.h>
 
 int main() {
-    if (!Shared::IsRunningAsAdmin()) {
+    /*if (!Shared::IsRunningAsAdmin()) {
         Logger::Info("Requesting administrator privileges...");
 
         if (!Shared::RequestAdminPrivileges()) {
@@ -22,7 +22,7 @@ int main() {
 
         Logger::Info("Exiting original process...");
         ExitProcess(0);
-    }
+    }*/
 
     Logger::Info("Slynx's War Thunder Launcher, booting...");
 

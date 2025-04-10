@@ -9,6 +9,7 @@
 #include <string>
 #include <fstream>
 #include <cstdint>
+#include <iostream>
 
 bool GameManager::StartGame() {
     Logger::Info("Launching War Thunder with overlay...");
@@ -17,7 +18,13 @@ bool GameManager::StartGame() {
 
     if (steamURL.empty()) {
         Logger::Error("No Steam game URL found. Please provide a valid Steam URL.");
-        return false;
+
+        Logger::Info("Please enter your Steam game URL (e.g., steam://rungameid/15553089753044746240): ");
+        std::getline(std::cin, steamURL);
+
+        Shared::SaveSteamURL(steamURL);
+
+        Logger::Info("Steam URL saved.");
     }
 
     Logger::Info("Launching game with Steam URL: " + steamURL);

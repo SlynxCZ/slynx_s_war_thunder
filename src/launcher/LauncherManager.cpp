@@ -58,26 +58,23 @@ bool LauncherManager::StartLauncher(int waitSeconds) {
 
 void LauncherManager::TerminateLauncher() {
     HWND hwnd = FindWindowA(nullptr, "Gaijin Smart Launcher");
-
     if (hwnd != nullptr) {
-        PostMessage(hwnd, WM_CLOSE, 0, 0);
-        Logger::Info("Sent WM_CLOSE to War Thunder Launcher.");
-    } else {
-        DWORD processId;
-        HWND localHwnd = FindWindowA(nullptr, nullptr);
-
-        if (localHwnd != nullptr) {
-            GetWindowThreadProcessId(localHwnd, &processId);
+        if (PostMessage(hwnd, WM_CLOSE, 0, 0)) {
+            Logger::Info("Sent WM_CLOSE to War Thunder Launcher.");
+        } else {
+            Logger::Warning("WM_CLOSE failed, trying to terminate process...");
+            DWORD processId;
+            GetWindowThreadProcessId(hwnd, &processId);
             HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, processId);
             if (hProcess != nullptr) {
                 TerminateProcess(hProcess, 0);
+                Logger::Info("Forcefully terminated the War Thunder Launcher process.");
                 CloseHandle(hProcess);
-                Logger::Info("Terminated War Thunder Launcher process directly.");
             } else {
-                Logger::Warning("Failed to open process for termination.");
+                Logger::Error("Failed to open process for termination.");
             }
-        } else {
-            Logger::Warning("Launcher window not found, could not close it via WM_CLOSE or terminate it.");
         }
+    } else {
+        Logger::Warning("Launcher window not found, could not close it via WM_CLOSE or process termination.");
     }
 }

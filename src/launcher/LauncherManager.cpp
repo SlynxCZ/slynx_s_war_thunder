@@ -16,7 +16,7 @@ bool LauncherManager::StartLauncher(int waitSeconds) {
     STARTUPINFO si = { sizeof(si) };
     PROCESS_INFORMATION pi;
 
-    std::string path = Shared::GetUserPath("\\AppData\\Local\\WarThunder\\launcher.exe");
+    std::string path = Shared::GetUserPath(R"(\AppData\Local\WarThunder\launcher.exe)");
     LPCSTR launcherPath = path.c_str();
 
     if (!CreateProcessA(launcherPath, nullptr, nullptr, nullptr, FALSE, 0, nullptr, nullptr, &si, &pi)) {
@@ -60,15 +60,14 @@ void LauncherManager::TerminateLauncher() {
     HWND hwnd = FindWindowA(nullptr, "Gaijin Smart Launcher");
 
     if (hwnd != nullptr) {
-        // Pokusíme se zavřít okno pomocí WM_CLOSE
         PostMessage(hwnd, WM_CLOSE, 0, 0);
         Logger::Info("Sent WM_CLOSE to War Thunder Launcher.");
     } else {
         DWORD processId;
-        HWND hwnd = FindWindowA(nullptr, nullptr);
+        HWND localHwnd = FindWindowA(nullptr, nullptr);
 
-        if (hwnd != nullptr) {
-            GetWindowThreadProcessId(hwnd, &processId);
+        if (localHwnd != nullptr) {
+            GetWindowThreadProcessId(localHwnd, &processId);
             HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, processId);
             if (hProcess != nullptr) {
                 TerminateProcess(hProcess, 0);

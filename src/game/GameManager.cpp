@@ -7,23 +7,28 @@
 #include "../Shared.h"
 #include <windows.h>
 #include <string>
+#include <fstream>
+#include <cstdint>
 
 bool GameManager::StartGame() {
     Logger::Info("Launching War Thunder with overlay...");
 
-    STARTUPINFO si = { sizeof(si) };
-    PROCESS_INFORMATION pi;
+    std::string steamURL = Shared::GetSteamURL();
 
-    std::string path = Shared::GetUserPath("\\AppData\\Local\\WarThunder\\win64\\aces.exe");
-    LPCSTR gamePath = path.c_str();
-
-    if (!CreateProcessA(gamePath, nullptr, nullptr, nullptr, FALSE, 0, nullptr, nullptr, &si, &pi)) {
-        Logger::Error("Failed to launch the game");
+    if (steamURL.empty()) {
+        Logger::Error("No Steam game URL found. Please provide a valid Steam URL.");
         return false;
     }
 
-    Logger::Info("Game process started successfully");
-    CloseHandle(pi.hProcess);
-    CloseHandle(pi.hThread);
+    Logger::Info("Launching game with Steam URL: " + steamURL);
+
+    HINSTANCE result = ShellExecuteA(nullptr, "open", steamURL.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
+
+    if (reinterpret_cast<std::uintptr_t>(result) <= 32) {
+        Logger::Error("Failed to launch game through Steam.");
+        return false;
+    }
+
+    Logger::Info("Game process started successfully.");
     return true;
 }

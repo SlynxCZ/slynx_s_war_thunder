@@ -6,13 +6,16 @@
 #include <string>
 #include <sstream>
 #include "Shared.h"
+
+#include <fstream>
+
 #include "logger/Logger.h"
 #include "launcher/LauncherManager.h"
 #include "game/GameManager.h"
 #include <shlobj.h>
 
 int main() {
-    /*if (!Shared::IsRunningAsAdmin()) {
+    if (!Shared::IsRunningAsAdmin()) {
         Logger::Info("Requesting administrator privileges...");
 
         if (!Shared::RequestAdminPrivileges()) {
@@ -22,7 +25,7 @@ int main() {
 
         Logger::Info("Exiting original process...");
         ExitProcess(0);
-    }*/
+    }
 
     Logger::Info("Slynx's War Thunder Launcher, booting...");
 
@@ -30,6 +33,8 @@ int main() {
     std::string targetPath = "C:/Slynx-War-Thunder-Launcher/Slynx's War Thunder Launcher.exe";
     std::string path = Shared::GetUserPath("\\Desktop\\Slynx's War Thunder Launcher.lnk");
     LPCSTR shortcutPath = path.c_str();
+
+    Logger::Warning(Shared::GetExecutablePath());
 
     if (!Shared::CheckAppDirectory(expectedPath)) {
         Logger::Error("Incorrect directory. Regenerating files and creating shortcut...");
@@ -40,7 +45,7 @@ int main() {
         return -1;
     }
 
-    if (LauncherManager::StartLauncher(10)) {
+    if (LauncherManager::StartLauncher(20)) {
         Logger::Info("Boot finished! Starting game...");
 
         if (!GameManager::StartGame()) {
@@ -57,7 +62,7 @@ int main() {
 std::string Shared::GetExecutablePath() {
     char buffer[MAX_PATH];
     GetModuleFileNameA(nullptr, buffer, MAX_PATH);
-    return std::string(buffer);
+    return std::string(buffer); // NOLINT(*-return-braced-init-list)
 }
 
 bool Shared::CheckAppDirectory(const std::string &expectedPath) {
@@ -234,4 +239,26 @@ void Shared::RegenerateFilesAndCreateShortcut(const std::string &targetPath, con
     if (!CreateShortcut(targetPath, shortcutPath)) {
         Logger::Error("Failed to create shortcut.");
     }
+}
+
+void Shared::SaveSteamURL(const std::string& steamURL) {
+    std::ofstream outFile("steamURL.txt");
+    if (outFile.is_open()) {
+        outFile << steamURL;
+        outFile.close();
+    } else {
+        Logger::Error("Failed to save Steam URL.");
+    }
+}
+
+std::string Shared::GetSteamURL() {
+    std::ifstream inFile("steamURL.txt");
+    std::string steamURL;
+
+    if (inFile.is_open()) {
+        std::getline(inFile, steamURL);
+        inFile.close();
+    }
+
+    return steamURL;
 }

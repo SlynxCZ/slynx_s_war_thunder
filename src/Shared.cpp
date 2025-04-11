@@ -242,9 +242,7 @@ void Shared::RegenerateFilesAndCreateShortcut(const std::string &targetPath, con
 
 
 void Shared::SaveSteamURL(const std::string& steamURL) {
-    std::filesystem::create_directories("C:\\Slynx-War-Thunder-Launcher");
-
-    std::ofstream outFile("C:\\Slynx-War-Thunder-Launcher\\steamURL.txt");
+    std::ofstream outFile("C:/Slynx-War-Thunder-Launcher//steamURL.txt");
 
     if (outFile.is_open()) {
         outFile << steamURL;
@@ -256,7 +254,7 @@ void Shared::SaveSteamURL(const std::string& steamURL) {
 }
 
 std::string Shared::GetSteamURL() {
-    std::ifstream inFile("C:\\Slynx-War-Thunder-Launcher\\steamURL.txt");
+    std::ifstream inFile("C:/Slynx-War-Thunder-Launcher/steamURL.txt");
 
     if (inFile.is_open()) {
         std::string steamURL;

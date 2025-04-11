@@ -23,8 +23,6 @@ bool GameManager::StartGame() {
         std::getline(std::cin, steamURL);
 
         Shared::SaveSteamURL(steamURL);
-
-        Logger::Info("Steam URL saved.");
     }
 
     Logger::Info("Launching game with Steam URL: " + steamURL);

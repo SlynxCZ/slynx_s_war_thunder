@@ -6,9 +6,8 @@
 #include <string>
 #include <sstream>
 #include "Shared.h"
-
 #include <fstream>
-
+#include <filesystem>
 #include "logger/Logger.h"
 #include "launcher/LauncherManager.h"
 #include "game/GameManager.h"
@@ -239,24 +238,31 @@ void Shared::RegenerateFilesAndCreateShortcut(const std::string &targetPath, con
     }
 }
 
+
 void Shared::SaveSteamURL(const std::string& steamURL) {
-    std::ofstream outFile("steamURL.txt");
+    std::filesystem::create_directories("C:\\Slynx-War-Thunder-Launcher");
+
+    std::ofstream outFile("C:\\Slynx-War-Thunder-Launcher\\steamURL.txt");
+
     if (outFile.is_open()) {
         outFile << steamURL;
         outFile.close();
+        Logger::Info("Steam URL saved successfully.");
     } else {
         Logger::Error("Failed to save Steam URL.");
     }
 }
 
 std::string Shared::GetSteamURL() {
-    std::ifstream inFile("steamURL.txt");
+    std::ifstream inFile("C:\\Slynx-War-Thunder-Launcher\\steamURL.txt");
     std::string steamURL;
 
     if (inFile.is_open()) {
         std::getline(inFile, steamURL);
         inFile.close();
+        return steamURL;
     }
 
-    return steamURL;
+    Logger::Error("Failed to read Steam URL.");
+    return "";
 }

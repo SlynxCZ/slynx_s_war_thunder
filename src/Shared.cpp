@@ -12,20 +12,10 @@
 #include "launcher/LauncherManager.h"
 #include "game/GameManager.h"
 #include <shlobj.h>
+#include <thread>
+#include <chrono>
 
 int main() {
-    /*if (!Shared::IsRunningAsAdmin()) {
-        Logger::Info("Requesting administrator privileges...");
-
-        if (!Shared::RequestAdminPrivileges()) {
-            Logger::Error("Failed to acquire admin privileges.");
-            return -1;
-        }
-
-        Logger::Info("Exiting original process...");
-        ExitProcess(0);
-    }*/
-
     Logger::Info("Slynx's War Thunder Launcher, booting...");
 
     std::string expectedPath = "C:\\Slynx-War-Thunder-Launcher";
@@ -47,6 +37,18 @@ int main() {
 
         if (!GameManager::StartGame()) {
             Logger::Error("Failed to launch the game.");
+        } else {
+            int countdown = 5;
+            while (countdown > 0) {
+                std::stringstream message;
+                message << "Closing launcher in " << countdown << " seconds...";
+                Logger::Info(message.str());
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+                countdown--;
+            }
+
+            Logger::Info("Launcher closing...");
+            ExitProcess(0);
         }
     } else {
         Logger::Error("Launcher could not boot.");
@@ -255,9 +257,9 @@ void Shared::SaveSteamURL(const std::string& steamURL) {
 
 std::string Shared::GetSteamURL() {
     std::ifstream inFile("C:\\Slynx-War-Thunder-Launcher\\steamURL.txt");
-    std::string steamURL;
 
     if (inFile.is_open()) {
+        std::string steamURL;
         std::getline(inFile, steamURL);
         inFile.close();
         return steamURL;

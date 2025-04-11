@@ -25,7 +25,7 @@ bool LauncherManager::StartLauncher(int waitSeconds) {
     }
 
     Logger::Info("Waiting " + std::to_string(waitSeconds) + " seconds for updates...");
-    Logger::Info("Press [Enter] to cancel and keep launcher open");
+    Logger::Warning("Press [Enter] to cancel and keep launcher open");
 
     bool cancel = false;
     for (int i = 0; i < waitSeconds * 10; ++i) {

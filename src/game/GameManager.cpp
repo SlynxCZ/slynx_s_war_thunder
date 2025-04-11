@@ -19,7 +19,7 @@ bool GameManager::StartGame() {
     if (steamURL.empty()) {
         Logger::Error("No Steam game URL found. Please provide a valid Steam URL.");
 
-        Logger::Info("Please enter your Steam game URL (e.g., steam://rungameid/15553089753044746240): ");
+        Logger::Warning("Please enter your Steam game URL (e.g., steam://rungameid/15553089753044746240): ");
         std::getline(std::cin, steamURL);
 
         Shared::SaveSteamURL(steamURL);
